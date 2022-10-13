@@ -1,0 +1,27 @@
+name: fasa_sandbox
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+
+dependencies:
+  crypto: ^3.0.2
+  cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
+  get: 4.6.5
+  http: ^0.13.5
+  intl: ^0.17.0
+  xml: ^6.1.0
+  xml2json: ^5.3.5
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+   - assets/local_data/
+  uses-material-design: true

@@ -1,0 +1,29 @@
+{
+   
+    "detail": [
+        {
+            "batchnumber": "TU2022100350550",
+            "datetime": "2022-10-03 11:31:33",
+            "type": "topup",
+            "to": "FPX34666",
+            "from": "0",
+            "amount": "5000000",
+            "note": "",
+            "status": "FINISH",
+            "currency": "IDR",
+            "fee": "0"
+        },
+        {
+            "batchnumber": "TU2022100377834",
+            "datetime": "2022-10-03 11:31:33",
+            "type": "topup",
+            "to": "FPX34666",
+            "from": "0",
+            "amount": "2000",
+            "note": "",
+            "status": "FINISH",
+            "currency": "USD",
+            "fee": "0"
+        }
+    ]
+}
