@@ -6,6 +6,7 @@ environment:
   sdk: '>=2.18.2 <3.0.0'
 
 dependencies:
+  animated_custom_dropdown: ^1.2.2
   crypto: ^3.0.2
   cupertino_icons: ^1.0.2
   flutter:

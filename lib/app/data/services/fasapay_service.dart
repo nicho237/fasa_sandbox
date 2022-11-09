@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, non_constant_identifier_namesim
 import 'dart:convert';
 
-
 import 'package:xml2json/xml2json.dart';
 import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
@@ -29,14 +28,44 @@ class FasapayServices {
   }
 
   static xmlAuth() async {
-    var apiKey = "b65d13c304f64218fc9e5fc7b5888f6e";
-    var apiSecretword = "tryapi";
+    var apiKey = "44f36b6cea1dce3c8cf756d752c640f9";
+    var apiSecretword = "123456";
     var token = createToken(apiKey, apiSecretword);
     var auth = buildAuth(apiKey, token);
 
     return auth;
   }
-   static history(
+
+  static transfer(
+    String amount,
+    String to,
+    String note,
+    String currency,
+  ) async {
+    var xml = '<fasa_request>' +
+        await xmlAuth() +
+        '<transfer id="2456">' +
+        '<to>$to</to>' +
+        '<amount>$amount</amount>' +
+        '<currency>$currency</currency>' +
+        '<note>$note</note>' +
+        '</transfer>' +
+        '</fasa_request>';
+
+    return await getResponse(xml);
+  }
+
+  static detail(
+    String batchnumber,
+  ) async {
+    var xml = '<fasa_request>' +
+        await xmlAuth() +
+        '<detail>$batchnumber</detail>' +
+        '</fasa_request>';
+    return await getResponse(xml);
+  }
+
+  static history(
     String startDate,
     String endDate,
     String type,
@@ -60,13 +89,13 @@ class FasapayServices {
 
     return await getResponse(xml);
   }
+
   static Future balance() async {
     var xml = '<fasa_request id="000001">' +
         await xmlAuth() +
         '<balance>IDR</balance>' +
         '<balance>USD</balance>' +
         '</fasa_request>';
-       
 
     return await getResponse(xml);
   }
@@ -86,11 +115,9 @@ class FasapayServices {
       if (response.statusCode == 200) {
         xml2json.parse(response.body);
         var message = xml2json.toParkerWithAttrs();
-        Map<String, dynamic> respon = json.decode(message);
-        print(message);
-        
+        //Map<String, dynamic> respon = json.decode(message);
 
-        return respon;
+        return message;
       } else {
         return 'Error Server';
       }
