@@ -2,51 +2,387 @@ import 'package:fasa_sandbox/app/data/models.dart';
 import 'package:fasa_sandbox/app/data/services/format_currency.dart';
 import 'package:fasa_sandbox/app/modules/home/controllers/home_controller.dart';
 import 'package:fasa_sandbox/app/modules/home/views/home_view.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class DetailTransactionView extends StatelessWidget {
+class DetailView extends GetView {
   final String batchnumber;
-  const DetailTransactionView({Key? key, required this.batchnumber})
-      : super(key: key);
+  const DetailView({Key? key, required this.batchnumber}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              TransactionSuccess(
+                batchnumber: batchnumber,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                alignment: AlignmentDirectional.topCenter,
+                width: Get.width,
+                height: 350,
+                child: Stack(
+                  alignment: AlignmentDirectional.topCenter,
+                  children: [DetailPelanggan()],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TransactionPending extends StatelessWidget {
+  const TransactionPending({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      width: Get.width,
+      height: 280,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            height: 132,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(
+                  Icons.pending_actions_outlined,
+                  color: Colors.orange,
+                  size: 50,
+                ),
+                Text("Transaksi Pending",
+                    style: TextStyle(fontSize: 18, color: Colors.orange)),
+                Text(
+                  "Rp 200.000.000",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.orange),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text("Pembayaran"),
+                    Text("27 Juli 2022, 12:00 PM")
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 52,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 150,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  CircleAvatar(
+                    radius: 20,
+                    child: Text(
+                      "VA",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Virtual Account",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text("Order ID"),
+                    Text("Transaction ID"),
+                    Text("Payment Link")
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: const [
+                    Text(
+                      "SANDBOX-G80300523",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      "939492013240134000234",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      "No",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class TransactionSuccess extends StatelessWidget {
+  final String batchnumber;
+  const TransactionSuccess({required this.batchnumber, super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
-    return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: ReadFromJson.detail(batchnumber),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final details = snapshot.data;
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(snapshot.data!.batchnumber),
-                  Text(
-                    snapshot.data!.status,
-                    style: TextStyle(
-                        color: snapshot.data!.status == "FINISH"
-                            ? Colors.green
-                            : Colors.redAccent),
+    return FutureBuilder(
+      future: ReadFromJson.detail(batchnumber),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final details = snapshot.data;
+          return Container(
+            padding: const EdgeInsets.all(12),
+            width: Get.width,
+            height: 280,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  height: 132,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        CupertinoIcons.checkmark_seal_fill,
+                        color: Colors.green,
+                        size: 50,
+                      ),
+                      Text("Transaksi Berhasil",
+                          style: TextStyle(fontSize: 18, color: Colors.green)),
+                      Text(
+                        FormatCurrency.currency(
+                            details!.currency, details.amount),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.green),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(controller.typeInfo(details.type)),
+                          Text('${details.date}, ${details.time}')
+                        ],
+                      ),
+                    ],
                   ),
-                  Text(FormatCurrency.currency(
-                    details!.currency,
-                    details.amount,
-                  )),
-                  Text(details.from),
-                  Text(details.time),
-                  Text(details.date)
-                ],
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+                ),
+                Container(
+                  height: 52,
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: 150,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        CircleAvatar(
+                          radius: 20,
+                          child: Text(
+                            "VA",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "Virtual Account",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text("Order ID"),
+                          Text("Transaction ID"),
+                          Text("Payment Link")
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            details.batchnumber,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "939492013240134000234",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "No",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
+class DetailPelanggan extends StatelessWidget {
+  const DetailPelanggan({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Get.width,
+      child: const ExpansionTile(
+        childrenPadding: EdgeInsets.symmetric(horizontal: 25),
+        title: ListTile(
+          leading: CircleAvatar(
+            child: Icon(Icons.person),
+          ),
+          title: Text("Detail Pelanggan"),
         ),
+        children: [
+          ListTile(
+            dense: true,
+            visualDensity: VisualDensity.compact,
+            title: Text(
+              "Nama",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            subtitle: Text(
+              "John Doe",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          ListTile(
+            dense: true,
+            visualDensity: VisualDensity.compact,
+            title: Text(
+              "Telpon",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            subtitle: Text(
+              "085802752570",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          ListTile(
+            dense: true,
+            visualDensity: VisualDensity.compact,
+            title: Text(
+              "Email",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            subtitle: Text(
+              "sentinel@gmail.com",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          ListTile(
+            dense: true,
+            visualDensity: VisualDensity.compact,
+            title: Text(
+              "Alamat",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            subtitle: Text(
+              "Indonesia, Asia, Bumi, Tata Surya, Bimasakti",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -8,7 +8,7 @@ class HomeController extends GetxController {
   final _to = "".obs;
   final _currency = "".obs;
   final _note = "Standart Service".obs;
-  final _batchnumber = "".obs;
+  final _account = "".obs;
 
   void getDataTransfer(
     String to,
@@ -45,7 +45,12 @@ class HomeController extends GetxController {
     return typeString;
   }
 
-  getDetail(String batchnumber) {
-    _batchnumber(batchnumber);
+  getDetail(String account) {
+    _account(account);
+  }
+
+  accountHolder() {
+    final String account = _account.value;
+    return account;
   }
 }

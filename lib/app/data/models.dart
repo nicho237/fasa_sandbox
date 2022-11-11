@@ -18,6 +18,21 @@ class ReadFromJson {
     }
   }
 
+  static Future<AccountModel?> account(String account) async {
+    final String response = await FasapayServices.account(account);
+    Map<String, dynamic> data = (json.decode(response)
+        as Map<String, dynamic>)["fasa_response"]["account"];
+
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return AccountModel(
+          fullname: data["fullname"],
+          account: data["account"],
+          status: data["status"]);
+    }
+  }
+
   static Future<List<HistoryModel?>> history() async {
     final String response = await FasapayServices.history(
       "",
@@ -91,6 +106,17 @@ class BalanceModel {
   final String idr;
   final String usd;
   BalanceModel({required this.idr, required this.usd});
+}
+
+class AccountModel {
+  final String fullname;
+  final String account;
+  final String status;
+  AccountModel({
+    required this.fullname,
+    required this.account,
+    required this.status,
+  });
 }
 
 class HistoryModel {

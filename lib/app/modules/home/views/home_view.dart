@@ -1,6 +1,7 @@
 import 'package:fasa_sandbox/app/data/models.dart';
 import 'package:fasa_sandbox/app/data/services/fasapay_service.dart';
 import 'package:fasa_sandbox/app/data/services/format_currency.dart';
+import 'package:fasa_sandbox/app/modules/home/views/account.dart';
 import 'package:fasa_sandbox/app/modules/home/views/detail_transaction_view.dart';
 import 'package:fasa_sandbox/app/modules/home/views/transfer_form.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,12 @@ import 'package:get/get.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import '../controllers/home_controller.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends GetView {
   HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('HomeView'),
@@ -25,7 +27,8 @@ class HomeView extends GetView<HomeController> {
               child: BalanceInfo(),
             ),
             InputWidget(),
-            HistoryInfo()
+            AccountInfo(),
+            HistoryInfo(),
           ],
         ),
       ),
@@ -113,7 +116,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                       onTap: () async {
                         controller.getDetail(histories[index]!.batchnumber);
 
-                        Get.to(() => DetailTransactionView(
+                        Get.to(() => DetailView(
                               batchnumber: controller._batchnumber.value,
                             ));
                       },

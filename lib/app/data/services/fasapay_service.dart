@@ -65,6 +65,16 @@ class FasapayServices {
     return await getResponse(xml);
   }
 
+  static account(
+    String account,
+  ) async {
+    var xml = '<fasa_request>' +
+        await xmlAuth() +
+        '<detail>$account</detail>' +
+        '</fasa_request>';
+    return await getResponse(xml);
+  }
+
   static history(
     String startDate,
     String endDate,
