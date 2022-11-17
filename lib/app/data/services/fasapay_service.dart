@@ -70,7 +70,7 @@ class FasapayServices {
   ) async {
     var xml = '<fasa_request>' +
         await xmlAuth() +
-        '<detail>$account</detail>' +
+        '<account>$account</account>' +
         '</fasa_request>';
     return await getResponse(xml);
   }
@@ -125,6 +125,7 @@ class FasapayServices {
       if (response.statusCode == 200) {
         xml2json.parse(response.body);
         var message = xml2json.toParkerWithAttrs();
+        print(message.toString());
         //Map<String, dynamic> respon = json.decode(message);
 
         return message;

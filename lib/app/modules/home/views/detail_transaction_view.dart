@@ -1,4 +1,5 @@
 import 'package:fasa_sandbox/app/data/models.dart';
+import 'package:fasa_sandbox/app/data/services/fasapay_service.dart';
 import 'package:fasa_sandbox/app/data/services/format_currency.dart';
 import 'package:fasa_sandbox/app/modules/home/controllers/home_controller.dart';
 import 'package:fasa_sandbox/app/modules/home/views/home_view.dart';
@@ -8,9 +9,20 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class DetailView extends GetView {
+class DetailView extends StatefulWidget {
   final String batchnumber;
-  const DetailView({Key? key, required this.batchnumber}) : super(key: key);
+  final String account;
+  const DetailView({
+    Key? key,
+    required this.batchnumber,
+    required this.account,
+  }) : super(key: key);
+
+  @override
+  State<DetailView> createState() => _DetailViewState();
+}
+
+class _DetailViewState extends State<DetailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +32,7 @@ class DetailView extends GetView {
           child: Column(
             children: [
               TransactionSuccess(
-                batchnumber: batchnumber,
+                batchnumber: widget.batchnumber,
               ),
               SizedBox(
                 height: 10,
@@ -31,7 +43,11 @@ class DetailView extends GetView {
                 height: 350,
                 child: Stack(
                   alignment: AlignmentDirectional.topCenter,
-                  children: [DetailPelanggan()],
+                  children: [
+                    DetailPelanggan(
+                      account: widget.account,
+                    )
+                  ],
                 ),
               )
             ],
@@ -295,13 +311,14 @@ class TransactionSuccess extends StatelessWidget {
 }
 
 class DetailPelanggan extends StatelessWidget {
-  const DetailPelanggan({super.key});
+  final String account;
+  const DetailPelanggan({required this.account, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: Get.width,
-      child: const ExpansionTile(
+      child: ExpansionTile(
         childrenPadding: EdgeInsets.symmetric(horizontal: 25),
         title: ListTile(
           leading: CircleAvatar(
@@ -310,23 +327,32 @@ class DetailPelanggan extends StatelessWidget {
           title: Text("Detail Pelanggan"),
         ),
         children: [
-          ListTile(
-            dense: true,
-            visualDensity: VisualDensity.compact,
-            title: Text(
-              "Nama",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            subtitle: Text(
-              "John Doe",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+          FutureBuilder(
+            future: ReadFromJson.account(account),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final accounts = snapshot.data;
+                return ListTile(
+                  dense: true,
+                  visualDensity: VisualDensity.compact,
+                  title: Text(
+                    "Nama",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  subtitle: Text(
+                    accounts!.fullname,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                );
+              }
+              return LinearProgressIndicator();
+            },
           ),
           ListTile(
             dense: true,

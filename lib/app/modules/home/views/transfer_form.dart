@@ -156,13 +156,13 @@ class AccountInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  controller.getDetail(account.text);
-                },
+                onPressed: () {},
                 child: const Icon(Icons.send),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  FasapayServices.account(account.text);
+                },
                 child: const Icon(Icons.history),
               ),
             ],
